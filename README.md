@@ -5,7 +5,7 @@ flaskServerCreator
 This project will allow me to convert a static website</br>
 to a server. 
 
-###functionalities
+#### functionalities
 
 - Take all the `.html` into a 'template' directory.
 
