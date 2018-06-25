@@ -3,4 +3,4 @@ project(flaskServerCreator)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(flaskServerCreator main.cpp)
+add_executable(flaskServerCreator main.cpp Website.cpp Website.h)
