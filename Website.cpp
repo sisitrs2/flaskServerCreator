@@ -7,8 +7,6 @@
 
 Website::Website(const char *path) : _path(path)
 {
-    //TODO: get templates from directory
-    //TODO: get assets from directory
     addFiles();
 }
 
@@ -79,7 +77,7 @@ void Website::getFiles(std::vector<std::string>& files)
     strcat(cmd, _path);
     strcat(cmd, "; ls");
     output = exec(cmd); //ls - shell command that lists unhidden files and directories in directory.
-
+    delete cmd;
     while( (pos = output.find('\n')) != std::string::npos )
     {
         files.push_back(output.substr(0, pos));
