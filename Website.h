@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <string.h>
 
 /*** Required for the exec function ***/
 #include <memory>
@@ -17,35 +18,40 @@ class Website {
 
 public:
 
-    explicit Website(std::string &path);
-
-    const std::vector<std::string>& getTemplates() const;
-    void setTemplates(const std::vector<std::string> &_templates);
-    const std::vector<std::string>& getAssets() const;
-    void setAssets(const std::vector<std::string> &_assets);
+    explicit Website(const char *path);
 
     /***
-     * This functions get files from path and save them in class vectors
-     * I would have put them as private but in case the path directory was
-     * changed, and a file was added it should be too added to the templates
-     * vector.
+     * Getters and Setters.
      */
-    void addTemplates();
-    void addAssets();
+    void setTemplates(const std::vector<std::string> &_templates);
+    void setAssets(const std::vector<std::string> &_assets);
+    const std::vector<std::string>& getTemplates() const;
+    const std::vector<std::string>& getAssets() const;
 
+    /***
+     * This function gets files from path and save them in class vectors
+     * I would've put them as private but in case files were added to the
+     * path directory they should be added to the classes vector.
+     */
+    void addFiles();
+
+private:
+
+    const char *_path;
+    std::vector<std::string> _templates; //Holds names of .html files.
+    std::vector<std::string> _assets;    //Holds names of directories.
+
+    /***
+     * Helper functions.
+     */
+    void getFiles(std::vector<std::string>& files);
+    std::string getDotName(const std::string& file);
     /***
      * Function that takes shell command and return output.
      * found on stackoverflow: https://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix
      * Credits to: waqas.
      */
     std::string exec(const char* cmd) const;
-
-private:
-
-    std::string _path;
-    std::vector<std::string> _templates; //Holds names of .html files.
-    std::vector<std::string> _assets;    //Holds names of directories.
-
 };
 
 
