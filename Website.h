@@ -7,14 +7,15 @@
 
 #include <vector>
 #include <string>
-#include <string.h>
+#include <cstring>
 
 /*** Required for the exec function ***/
 #include <memory>
 /*** ***/
 
 
-class Website {
+class Website
+{
 
 public:
 
@@ -24,9 +25,10 @@ public:
      * Getters and Setters.
      */
     void setTemplates(const std::vector<std::string> &_templates);
-    void setAssets(const std::vector<std::string> &_assets);
+    void setAssets(const std::string &_assets);
     const std::vector<std::string>& getTemplates() const;
-    const std::vector<std::string>& getAssets() const;
+    const std::string& getAssets() const;
+    const std::string& getPath() const;
 
     /***
      * This function gets files from path and save them in class vectors
@@ -39,7 +41,13 @@ private:
 
     const char *_path;
     std::vector<std::string> _templates; //Holds names of .html files.
-    std::vector<std::string> _assets;    //Holds names of directories.
+    std::string _assets;    //Holds name of assets/Assets.
+    /***
+     * Future idea - use map for _assets, get all non .html files and put them
+     * in _assets with file name as key and file type as value.
+     * Then when creating a server create static folder with folder for
+     * each type instead of assets folder as a requirement.
+     */
 
     /***
      * Helper functions.

@@ -20,14 +20,19 @@ void Website::setTemplates(const std::vector<std::string> &_templates)
     this->_templates = _templates;
 }
 
-const std::vector<std::string> &Website::getAssets() const
+const std::string &Website::getAssets() const
 {
     return _assets;
 }
 
-void Website::setAssets(const std::vector<std::string> &_assets)
+void Website::setAssets(const std::string &_assets)
 {
     this->_assets = _assets;
+}
+
+const std::string& Website::getPath() const
+{
+    return _path;
 }
 
 void Website::addFiles()
@@ -48,7 +53,7 @@ void Website::addFiles()
         }
         else if (dotName.empty() && (file == "assets" || file == "Assets"))
         {
-            _assets.push_back(file);
+            _assets = file;
         }
         else
         {
@@ -77,7 +82,7 @@ void Website::getFiles(std::vector<std::string>& files)
     strcat(cmd, _path);
     strcat(cmd, "; ls");
     output = exec(cmd); //ls - shell command that lists unhidden files and directories in directory.
-    delete cmd;
+
     while( (pos = output.find('\n')) != std::string::npos )
     {
         files.push_back(output.substr(0, pos));
