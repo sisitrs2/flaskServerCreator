@@ -6,6 +6,7 @@
 #define FLASKSERVERCREATOR_SERVERCREATOR_H
 
 #include "Website.h"
+#
 
 class ServerCreator
 {
@@ -13,6 +14,7 @@ class ServerCreator
 public:
 
     explicit ServerCreator(Website& website);
+
 
 private:
 
@@ -24,6 +26,9 @@ private:
      * Credits to: waqas.
      */
     std::string exec(const char* cmd) const;
+    void makeServerDir() const;
+    void getWebsiteDirName(std::string& name) const;
+    std::string getLastDirInPath(const std::string& path) const;
 };
 
 

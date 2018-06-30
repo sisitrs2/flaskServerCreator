@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <iostream>
 
 /*** Required for the exec function ***/
 #include <memory>
@@ -28,7 +29,7 @@ public:
     void setAssets(const std::string &_assets);
     const std::vector<std::string>& getTemplates() const;
     const std::string& getAssets() const;
-    const std::string& getPath() const;
+    const char* getPath() const;
 
     /***
      * This function gets files from path and save them in class vectors

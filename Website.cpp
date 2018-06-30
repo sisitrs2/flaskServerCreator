@@ -3,7 +3,6 @@
 //
 
 #include "Website.h"
-#include <iostream>
 
 Website::Website(const char *path) : _path(path)
 {
@@ -30,7 +29,7 @@ void Website::setAssets(const std::string &_assets)
     this->_assets = _assets;
 }
 
-const std::string& Website::getPath() const
+const char* Website::getPath() const
 {
     return _path;
 }
@@ -57,8 +56,9 @@ void Website::addFiles()
         }
         else
         {
-            std::cout << "Loose file: " + file << std::endl;
+            std::cout << "Loose file: " + file << '\n';
         }
+        std::cout << std::endl; //Space paragraph and flush buffer.
     }
 }
 
