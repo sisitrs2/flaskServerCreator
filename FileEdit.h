@@ -21,7 +21,6 @@ public:
     FileEdit(const std::string& src, const std::string& dst);
     ~FileEdit();
 
-    void close();
     void saveChanges() const;
     /***
      * replaceAll function allow  a change on all lines in file.

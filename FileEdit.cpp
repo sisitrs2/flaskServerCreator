@@ -22,11 +22,6 @@ FileEdit::~FileEdit()
     saveChanges();
 }
 
-void FileEdit::close()
-{
-    delete this; // Call destructor.
-}
-
 void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr)
 {
     for(Line& line : _lines)
