@@ -15,13 +15,12 @@ class Line;
 
 class FileEdit {
 
-    FileEdit() = default;
+public:
+
     explicit FileEdit(const std::string& file);
     FileEdit(const std::string& src, const std::string& dst);
     ~FileEdit();
 
-    void open(const std::string& file);
-    void open(const std::string& src, const std::string& dst);
     void close();
     void saveChanges() const;
     /***
@@ -37,14 +36,14 @@ class FileEdit {
      */
     void replaceAll(const std::string& toRemove, const std::string& newStr);
     void replaceAll(const std::string& toRemove, const std::string& newStr, const std::string& var);
-
+    std::vector<Line>& getLines();
 
 private:
 
     std::string _fileType;
-    std::string _file;
+    const std::string _file;
     std::string _newFile;
-    bool _isReplaced; //If there is no dst file the file will be replaced with it's new instance.
+    const bool _isReplaced; //If there is no dst file the file will be replaced with it's new instance.
     std::vector<Line> _lines;
 
 
@@ -66,11 +65,13 @@ public:
     void setLine(const Line& line);
     unsigned long length() const;
     unsigned long find(const std::string& str) const;
+    unsigned long find(const std::string& str, const unsigned long& pos) const;
     void append(const std::string& str);
     void append(const Line& line);
     void remove(const std::string& str);
     void remove(const Line& line);
     void replace(const std::string& src, const std::string& dst);
+    void replace(const std::string& src, const std::string& dst, const unsigned long& pos);
     /*Add change word*/
     /*Next step will be to add split and join options*/
 
@@ -82,9 +83,8 @@ public:
     Line& operator-=(const Line& line);
     Line& operator=(const std::string& str);
     Line& operator=(const Line& line);
-
-
-
+    Line& operator<<(const std::string& str);
+    Line& operator<<(const Line& line);
 private:
 
     std::string _line;

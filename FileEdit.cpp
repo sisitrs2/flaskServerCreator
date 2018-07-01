@@ -5,40 +5,21 @@
 #include "FileEdit.h"
 
 
-FileEdit::FileEdit() = default {}
-
 FileEdit::FileEdit(const std::string &file) : _file(file), _isReplaced(true)
 {
-    initFileType();
+    initFileType(); //Not necessary yet.
     initLines();
 }
 
 FileEdit::FileEdit(const std::string &src, const std::string &dst) : _file(src), _newFile(dst), _isReplaced(false)
 {
-    initFileType();
+    initFileType(); //Not necessary yet.
     initLines();
 }
 
 FileEdit::~FileEdit()
 {
     saveChanges();
-}
-
-void FileEdit::open(const std::string &file)
-{
-    _file = file;
-    _isReplaced = true;
-    initFileType();
-    initLines();
-}
-
-void FileEdit::open(const std::string &src, const std::string &dst)
-{
-    _file = src;
-    _newFile = dst;
-    _isReplaced = false;
-    initFileType();
-    initLines();
 }
 
 void FileEdit::close()
@@ -48,7 +29,7 @@ void FileEdit::close()
 
 void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr)
 {
-    for(Line line : _lines)
+    for(Line& line : _lines)
     {
         line.replace(toRemove, newStr);
     }
@@ -59,7 +40,7 @@ void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr
     unsigned long beforeSize; //toRemove length of part before var.
     unsigned long afterSize;
     unsigned long varSize; //length of var
-    unsigned short beforeStart; //start of before part in toRemove (0)
+    unsigned int beforeStart; //start of before part in toRemove (0)
     unsigned long afterStart; //start of after part in toRemove
     long beforePos; //position of part before var in Line.
     long afterPos; //position of part after var in Line.
@@ -85,16 +66,16 @@ void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr
     afterStart = toRemoveSize - afterSize;
 
 
-    for(Line line : _lines)
+    for(Line& line : _lines)
     {
         beforePos = line.find(toRemove.substr(0, beforeSize));
         if(beforePos != std::string::npos)
         {
-            afterPos = line.find(toRemove.substr(afterStart, toRemoveSize));
-            if(afterPos != std::string::npos and afterPos > beforePos)
+            afterPos = line.find(toRemove.substr(afterStart, toRemoveSize), beforePos + beforeSize);
+            if(afterPos != std::string::npos)
             {
+                line.replace(toRemove.substr(afterStart, afterSize), newStr.substr(newAfterStart, newAfterSize), beforePos + beforeSize);
                 line.replace(toRemove.substr(beforeStart, beforeSize), newStr.substr(newBeforeStart, newBeforeSize));
-                line.replace(toRemove.substr(afterStart, afterSize), newStr.substr(newAfterStart, newAfterSize));
             }
         }
     }
@@ -144,12 +125,17 @@ void FileEdit::saveChanges() const
     }
     if (file.is_open())
     {
-        for(Line line : _lines)
+        for(const Line& line : _lines)
         {
             file << line.getLine() << '\n';
         }
         file.close();
     }
+}
+
+std::vector<Line> &FileEdit::getLines()
+{
+    return _lines;
 }
 
 
@@ -180,6 +166,11 @@ unsigned long Line::length() const
 unsigned long Line::find(const std::string &str) const
 {
     return _line.find(str);
+}
+
+unsigned long Line::find(const std::string &str, const unsigned long &pos) const
+{
+    return _line.find(str, pos);
 }
 
 void Line::append(const std::string &str)
@@ -232,6 +223,19 @@ void Line::replace(const std::string &src, const std::string &dst)
     }
 }
 
+void Line::replace(const std::string &src, const std::string &dst, const unsigned long& pos)
+{
+    unsigned long size; //str length
+    unsigned long posInLine; //position in _line
+    size = src.length();
+    posInLine = _line.find(src, pos);
+    if(posInLine != std::string::npos) //if str was found in _line.
+    {
+        //the string in middle of _line gets replaced.
+        _line = _line.substr(0, posInLine)  + dst + _line.substr(posInLine + size, _line.length());
+    }
+}
+
 std::string Line::operator+(const std::string &str) const
 {
     return _line + str;
@@ -275,13 +279,27 @@ Line &Line::operator-=(const Line &line)
     return *this;
 }
 
-Line &Line::operator=(const std::string &str) {
+Line &Line::operator=(const std::string &str)
+{
     setLine(str);
     return *this;
 }
 
-Line &Line::operator=(const Line &line) {
+Line &Line::operator=(const Line &line)
+{
     setLine(line);
+    return *this;
+}
+
+Line &Line::operator<<(const std::string &str)
+{
+    append(str);
+    return *this;
+}
+
+Line &Line::operator<<(const Line &line)
+{
+    append(line);
     return *this;
 }
 
