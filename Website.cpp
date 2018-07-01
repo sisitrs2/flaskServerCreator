@@ -4,7 +4,7 @@
 
 #include "Website.h"
 
-Website::Website(const char *path) : _path(path)
+Website::Website(const std::string& path) : _path(path)
 {
     addFiles();
 }
@@ -29,7 +29,7 @@ void Website::setAssets(const std::string &_assets)
     this->_assets = _assets;
 }
 
-const char* Website::getPath() const
+const std::string& Website::getPath() const
 {
     return _path;
 }
@@ -37,8 +37,6 @@ const char* Website::getPath() const
 void Website::addFiles()
 {
     std::vector<std::string> files; //files and directories
-    std::string output; //store exec function output.
-    std::size_t pos;
     std::string dotName;
 
     getFiles(files);
@@ -77,10 +75,8 @@ void Website::getFiles(std::vector<std::string>& files)
 {
     std::string output; //store exec function output.
     std::size_t pos;
-    char *cmd = new char[strlen(this->_path)];
-    strcpy(cmd, "cd ");
-    strcat(cmd, _path);
-    strcat(cmd, "; ls");
+    std::string cmd = "cd " + _path + "; ls";
+
     output = exec(cmd); //ls - shell command that lists unhidden files and directories in directory.
 
     while( (pos = output.find('\n')) != std::string::npos )
@@ -90,11 +86,11 @@ void Website::getFiles(std::vector<std::string>& files)
     }
 }
 
-std::string Website::exec(const char* cmd) const
+std::string Website::exec(const std::string& cmd) const
 {
     std::array<char, 128> buffer;
     std::string result;
-    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
     if (!pipe) throw std::runtime_error("popen() failed!");
     while (!feof(pipe.get())) {
         if (fgets(buffer.data(), 128, pipe.get()) != nullptr)

@@ -20,7 +20,7 @@ class Website
 
 public:
 
-    explicit Website(const char *path);
+    explicit Website(const std::string& path);
 
     /***
      * Getters and Setters.
@@ -29,7 +29,7 @@ public:
     void setAssets(const std::string &_assets);
     const std::vector<std::string>& getTemplates() const;
     const std::string& getAssets() const;
-    const char* getPath() const;
+    const std::string& getPath() const;
 
     /***
      * This function gets files from path and save them in class vectors
@@ -40,7 +40,7 @@ public:
 
 private:
 
-    const char *_path;
+    std::string _path;
     std::vector<std::string> _templates; //Holds names of .html files.
     std::string _assets;    //Holds name of assets/Assets.
     /***
@@ -60,7 +60,7 @@ private:
      * found on stackoverflow: https://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix
      * Credits to: waqas.
      */
-    std::string exec(const char* cmd) const;
+    std::string exec(const std::string& cmd) const;
 };
 
 
