@@ -21,7 +21,7 @@ private:
     Website _website;
     std::string _serverDirName;
 
-    std::string exec(const char* cmd) const;
+    std::string exec(const std::string& cmd) const;
     void makeServerDir();
     void getWebsiteDirName(std::string& name) const;
     std::string getLastDirInPath(const std::string& path) const;
@@ -30,6 +30,7 @@ private:
     void createTemplatePage(const std::string& page) const;
     void createApp() const;
     void addRoutesToApp(FileEdit& app) const;
+    void createStatic() const;
 };
 
 

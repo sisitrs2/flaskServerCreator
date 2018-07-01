@@ -10,7 +10,7 @@ ServerCreator::ServerCreator(Website &website) : _website(website)
     this->makeServerDir();
     this->createTemplates();
     this->createApp();
-
+    this->createStatic();
 }
 
 /***
@@ -18,11 +18,11 @@ ServerCreator::ServerCreator(Website &website) : _website(website)
      * found on stackoverflow: https://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix
      * Credits to: waqas.
      */
-std::string ServerCreator::exec(const char* cmd) const
+std::string ServerCreator::exec(const std::string& cmd) const
 {
     std::array<char, 128> buffer;
     std::string result;
-    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
     if (!pipe) throw std::runtime_error("popen() failed!");
     while (!feof(pipe.get())) {
         if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
@@ -73,17 +73,16 @@ void ServerCreator::makeServerDir()
 void ServerCreator::getWebsiteDirName(std::string& name) const
 {
     std::string output;
-    const char *path = this->_website.getPath();
+    std::string cmd;
+    const char *path = _website.getPath();
 
     //Shell command: $ cd website_path; pwd
     //cd: change directory
     //pwd: writes the full pathname of the current working directory.
-    char cmd[strlen("cd ") + strlen(path) + strlen("; pwd") + 1];
-    strcpy(cmd, "cd ");
-    strcat(cmd, path);
-    strcat(cmd, "; pwd");
+    cmd = "cd " + std::string(_website.getPath()) + "; pwd";
     output = exec(cmd);
-    name = this->getLastDirInPath(output);
+
+    name = getLastDirInPath(output);
     //before: name = "full/pathname/of/website_name"
     //after: name = "website_name"
 }
@@ -131,7 +130,6 @@ void ServerCreator::createTemplatePage(const std::string &page) const
 
 void ServerCreator::createApp() const
 {
-    std::string output;
     FileEdit file(_serverDirName + "/app.py");
     file << "from flask import Flask, request, render_template";
     file << "";
@@ -145,5 +143,33 @@ void ServerCreator::createApp() const
 
 void ServerCreator::addRoutesToApp(FileEdit& app) const
 {
-    //TODO: create Routes.
+    std::string pageName;
+    for(const std::string& page : _website.getTemplates())
+    {
+        pageName = page.substr(0, page.length() - 5); // index.html => index
+        if (page == "index")
+        {
+            app << "@app.route('/')";
+            app << "def index():";
+            app << "    return render_template('index.html')";
+        }
+        app << "@app.route('/" + pageName + "')";
+        app << "def " + pageName + "():";
+        app << "    return render_template('" + pageName + ".html')";
+        app << "";
+    }
+}
+
+void ServerCreator::createStatic() const
+{
+    std::string output;
+    std::string srcPath;
+    std::string dstPath;
+
+    output = exec("cd " + _serverDirName + "; mkdir static");
+    std::cout << "Directory " << _serverDirName << "/static added." << std::endl;
+
+    srcPath = std::string(_website.getPath()) + "/" + _website.getAssets();
+    dstPath = _serverDirName + "/static";
+    output = exec("cp -a " + srcPath + "/. " + dstPath);
 }
