@@ -9,6 +9,7 @@ ServerCreator::ServerCreator(Website &website) : _website(website)
     //Create website_server and website_server/templates directories.
     this->makeServerDir();
     this->createTemplates();
+    this->createApp();
 
 }
 
@@ -126,4 +127,23 @@ void ServerCreator::createTemplatePage(const std::string &page) const
     file->replaceAll("src=\"assets/{{x}}\"", "src=\"{{ url_for('static', filename='{{x}}') }}\"", "{{x}}");
 
     delete file;
+}
+
+void ServerCreator::createApp() const
+{
+    std::string output;
+    FileEdit file(_serverDirName + "/app.py");
+    file << "from flask import Flask, request, render_template";
+    file << "";
+    file << "app = Flask(__name__)";
+    file << "";
+    addRoutesToApp(file);
+    file << "";
+    file << "if __name__ == \"__main__\":";
+    file << "   app.run(debug = True, host='0.0.0.0', port=80)";
+}
+
+void ServerCreator::addRoutesToApp(FileEdit& app) const
+{
+    //TODO: create Routes.
 }

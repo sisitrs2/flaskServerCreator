@@ -37,6 +37,8 @@ public:
     void replaceAll(const std::string& toRemove, const std::string& newStr, const std::string& var);
     std::vector<Line>& getLines();
 
+    void operator<<(const std::string& str);
+
 private:
 
     std::string _fileType;

@@ -28,6 +28,8 @@ private:
 
     void createTemplates() const;
     void createTemplatePage(const std::string& page) const;
+    void createApp() const;
+    void addRoutesToApp(FileEdit& app) const;
 };
 
 
