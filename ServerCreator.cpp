@@ -8,11 +8,15 @@ ServerCreator::ServerCreator(Website &website) : _website(website)
 {
     //Create website_server and website_server/templates directories.
     this->makeServerDir();
-
+    this->createTemplates();
 
 }
 
-
+/***
+     * This function that takes shell command and return output.
+     * found on stackoverflow: https://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix
+     * Credits to: waqas.
+     */
 std::string ServerCreator::exec(const char* cmd) const
 {
     std::array<char, 128> buffer;
@@ -26,7 +30,7 @@ std::string ServerCreator::exec(const char* cmd) const
     return result;
 }
 
-void ServerCreator::makeServerDir() const
+void ServerCreator::makeServerDir()
 {
     std::string name; //Name of website directory.
     std::string output;
@@ -44,7 +48,8 @@ void ServerCreator::makeServerDir() const
     strcat(cmd, name.c_str());
 
     //Create website_server directory.
-    //TO_FREE: output = this->exec(cmd);
+    this->exec(cmd);
+    _serverDirName = name;
     std::cout << "Directory " << name << " added." << std::endl;
     delete cmd;
 
@@ -58,7 +63,7 @@ void ServerCreator::makeServerDir() const
     strcat(cmd, "; mkdir templates");
 
     //Create website_server/templates directory.
-    //TO_FREE: output = this->exec(cmd);
+    output = this->exec(cmd);
     std::cout << "Directory " << name << "/templates added." << std::endl;
     delete cmd;
 
@@ -90,4 +95,35 @@ std::string ServerCreator::getLastDirInPath(const std::string &path) const {
         return( path.substr(pos + 1, path.length()) ); //returns word AFTER '/'.
     }
     return(path);
+}
+
+void ServerCreator::createTemplates() const
+{
+    for(const std::string& page : _website.getTemplates())
+    {
+        createTemplatePage(page);
+    }
+}
+
+void ServerCreator::createTemplatePage(const std::string &page) const
+{
+    std::string srcFile;
+    std::string dstFile;
+
+    srcFile = _website.getPath();
+    srcFile += '/' + page;
+    dstFile = _serverDirName + "/templates/" + page;
+
+    auto file = new FileEdit(srcFile, dstFile);
+
+    //Html links
+    file->replaceAll("href=\"{{x}}.html\"", "href=\"{{ url_for({{x}}) }}\"", "{{x}}");
+
+    //Non-js links
+    file->replaceAll("href=\"assets/{{x}}\"", "href=\"{{ url_for('static', filename='{{x}}') }}\"", "{{x}}");
+
+    //Js links
+    file->replaceAll("src=\"assets/{{x}}\"", "src=\"{{ url_for('static', filename='{{x}}') }}\"", "{{x}}");
+
+    delete file;
 }
