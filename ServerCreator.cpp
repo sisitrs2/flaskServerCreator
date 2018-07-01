@@ -36,50 +36,36 @@ void ServerCreator::makeServerDir()
     std::string name; //Name of website directory.
     std::string output;
     std::size_t cmd_length;
-    char* cmd;
+    std::string cmd;
 
     //Create shell code to make the server folder.
     this->getWebsiteDirName(name);
     name.pop_back(); //delete \n
     name.append("_server");
-    cmd_length = strlen("mkdir ");
-    cmd_length += strlen(name.c_str());
-    cmd = new char[cmd_length + 1];
-    strcpy(cmd, "mkdir ");
-    strcat(cmd, name.c_str());
+    cmd = "mkdir " + name;
 
     //Create website_server directory.
-    this->exec(cmd);
+    exec(cmd);
     _serverDirName = name;
     std::cout << "Directory " << name << " added." << std::endl;
-    delete cmd;
 
     //Create shell code to make the templates folder.
-    cmd_length = strlen("cd ");
-    cmd_length += strlen(name.c_str());
-    cmd_length += strlen("; mkdir templates");
-    cmd = new char[cmd_length + 1];
-    strcpy(cmd, "cd ");
-    strcat(cmd, name.c_str());
-    strcat(cmd, "; mkdir templates");
+    cmd = "cd " + name + "; mkdir templates";
 
     //Create website_server/templates directory.
     output = this->exec(cmd);
     std::cout << "Directory " << name << "/templates added." << std::endl;
-    delete cmd;
-
 }
 
 void ServerCreator::getWebsiteDirName(std::string& name) const
 {
     std::string output;
     std::string cmd;
-    const char *path = _website.getPath();
 
     //Shell command: $ cd website_path; pwd
     //cd: change directory
     //pwd: writes the full pathname of the current working directory.
-    cmd = "cd " + std::string(_website.getPath()) + "; pwd";
+    cmd = "cd " + _website.getPath() + "; pwd";
     output = exec(cmd);
 
     name = getLastDirInPath(output);
@@ -169,7 +155,7 @@ void ServerCreator::createStatic() const
     output = exec("cd " + _serverDirName + "; mkdir static");
     std::cout << "Directory " << _serverDirName << "/static added." << std::endl;
 
-    srcPath = std::string(_website.getPath()) + "/" + _website.getAssets();
+    srcPath = _website.getPath() + "/" + _website.getAssets();
     dstPath = _serverDirName + "/static";
     output = exec("cp -a " + srcPath + "/. " + dstPath);
 }

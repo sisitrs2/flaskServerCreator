@@ -41,7 +41,7 @@ void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr
     long afterPos; //position of part after var in Line.
     unsigned long toRemoveSize;
 
-    unsigned short newBeforeStart;
+    unsigned int newBeforeStart;
     unsigned long newBeforeSize;
     unsigned long newAfterStart;
     unsigned long newAfterSize;
@@ -78,7 +78,7 @@ void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr
 
 void FileEdit::initFileType()
 {
-    unsigned long dotPos;
+    unsigned int dotPos;
     unsigned int fileNameLength;
 
     dotPos = _file.find_last_of('.');
