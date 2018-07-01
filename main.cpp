@@ -8,7 +8,7 @@ using std::cout;
 using std::endl;
 
 int main() {
-    FileEdit file("../index.html", "../changed.html");
+    FileEdit file("../index.html");
     //file.replaceAll("href=\"{{x}}.html\"", "href=\"{{ url_for({{x}}) }}\"", "{{x}}");
     //file.replaceAll("href=\"assets/{{x}}\"", "href=\"{{ url_for('static', filename='{{x}}') }}\"", "{{x}}");
     //std::string path;
