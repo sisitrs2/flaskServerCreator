@@ -133,6 +133,11 @@ std::vector<Line> &FileEdit::getLines()
     return _lines;
 }
 
+void FileEdit::operator<<(const std::string &str)
+{
+    this->_lines.emplace_back(Line(str));
+}
+
 
 Line::Line(const std::string &str) : _line(str){}
 

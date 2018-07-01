@@ -6,7 +6,7 @@
 #define FLASKSERVERCREATOR_SERVERCREATOR_H
 
 #include "Website.h"
-#
+#include "FileEdit.h"
 
 class ServerCreator
 {
@@ -19,16 +19,18 @@ public:
 private:
 
     Website _website;
+    std::string _serverDirName;
 
-    /***
-     * This function that takes shell command and return output.
-     * found on stackoverflow: https://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix
-     * Credits to: waqas.
-     */
-    std::string exec(const char* cmd) const;
-    void makeServerDir() const;
+    std::string exec(const std::string& cmd) const;
+    void makeServerDir();
     void getWebsiteDirName(std::string& name) const;
     std::string getLastDirInPath(const std::string& path) const;
+
+    void createTemplates() const;
+    void createTemplatePage(const std::string& page) const;
+    void createApp() const;
+    void addRoutesToApp(FileEdit& app) const;
+    void createStatic() const;
 };
 
 
