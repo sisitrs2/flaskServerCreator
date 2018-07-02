@@ -14,19 +14,9 @@ const std::vector<std::string> &Website::getTemplates() const
     return _templates;
 }
 
-void Website::setTemplates(const std::vector<std::string> &_templates)
-{
-    this->_templates = _templates;
-}
-
 const std::string &Website::getAssets() const
 {
     return _assets;
-}
-
-void Website::setAssets(const std::string &_assets)
-{
-    this->_assets = _assets;
 }
 
 const std::string& Website::getPath() const
@@ -43,7 +33,7 @@ void Website::addFiles()
 
     for(const std::string& file : files) // for(each value in vector : vector) - Added in c++11
     {
-        dotName = getDotName(file);
+        dotName = getFileType(file);
         if(dotName == "html")
         {
             _templates.push_back(file);
@@ -60,7 +50,7 @@ void Website::addFiles()
     }
 }
 
-std::string Website::getDotName(const std::string& file)
+std::string Website::getFileType(const std::string& file)
 {
     std::size_t pos;
     pos = file.find_last_of('.');

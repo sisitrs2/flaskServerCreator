@@ -7,13 +7,13 @@
 
 FileEdit::FileEdit(const std::string &file) : _file(file), _isReplaced(true)
 {
-    initFileType(); //Not necessary yet.
+    initFileType(); //Unnecessary yet.
     initLines();
 }
 
 FileEdit::FileEdit(const std::string &src, const std::string &dst) : _file(src), _newFile(dst), _isReplaced(false)
 {
-    initFileType(); //Not necessary yet.
+    initFileType(); //Unnecessary yet.
     initLines();
 }
 

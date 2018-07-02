@@ -11,8 +11,8 @@ int main() {
 
     cout << "Enter website directory: ";
     cin >> path;
-    Website a(path);
-    ServerCreator b(a);
+    Website staticWebsite(path);
+    ServerCreator create(staticWebsite);
 
     std::cout << "End of Program." << std::endl;
 
