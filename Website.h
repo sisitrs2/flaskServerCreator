@@ -20,7 +20,7 @@
 //
 // This class was created for the use of the ServerCreator class.
 //
-// Example:
+// Use:
 //
 //     Website staticWebsite("/path/to/website/directory");
 //     ServerCreator create(staticWebsite);

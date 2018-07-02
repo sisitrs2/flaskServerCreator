@@ -1,23 +1,30 @@
 //
-// Created by Daniel(sisitrs2) on 6/26/18.
+// Copyright(c) 2018 Daniel Arad.
 //
+// Distributed under the MIT License (http://opensource.org/licenses/MIT)
+//
+// ---------------------------------------------------------------------
+// File: ServerCreator.cpp
+// ---------------------------------------------------------------------
 
 #include "ServerCreator.h"
 
 ServerCreator::ServerCreator(Website &website) : _website(website)
 {
-    //Create website_server and website_server/templates directories.
+    // Create website_server and website_server/templates directories.
     this->makeServerDir();
+
+    // Add html files to templates directory.
     this->createTemplates();
+
+    // Create app.py file and add routes to html file.
     this->createApp();
+
+    // Create website_server/static directory and copy all content from assets directory.
     this->createStatic();
 }
 
-/***
-     * This function that takes shell command and return output.
-     * found on stackoverflow: https://stackoverflow.com/questions/478898/how-to-execute-a-command-and-get-output-of-command-within-c-using-posix
-     * Credits to: waqas.
-     */
+
 std::string ServerCreator::exec(const std::string& cmd) const
 {
     std::array<char, 128> buffer;
