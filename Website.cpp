@@ -31,21 +31,36 @@ const std::string& Website::getPath() const
     return _path;
 }
 
+const std::map<std::string, std::string>& Website::getBadNames() const {
+    return _badNames;
+}
+
+
 void Website::addFiles()
 {
     std::vector<std::string> files; //files and directories
-    std::string dotName;
+    std::string fileType;
+    std::string fixFile;
+    unsigned long pos;
 
     getFiles(files);
 
     for(const std::string& file : files) // for(each value in vector : vector) - Added in c++11
     {
-        dotName = getFileType(file);
-        if(dotName == "html")
+        fileType = getFileType(file);
+        if(fileType == "html")
         {
+            pos = file.find('-');
+            if(pos != std::string::npos)
+            {
+                fixFile = file;
+                fixFile[pos] = '_';
+                _badNames[file] = fixFile;
+            }
             _templates.push_back(file);
+
         }
-        else if (dotName.empty() && (file == "assets" || file == "Assets"))
+        else if (fileType.empty() && (file == "assets" || file == "Assets"))
         {
             _assets = file;
         }
@@ -95,4 +110,3 @@ std::string Website::exec(const std::string& cmd) const
     }
     return result;
 }
-

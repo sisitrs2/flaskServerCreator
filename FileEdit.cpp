@@ -139,6 +139,7 @@ void FileEdit::operator<<(const std::string &str)
 }
 
 
+
 Line::Line(const std::string &str) : _line(str){}
 
 Line::Line(const Line &line) : _line(line.getLine()) {}
@@ -153,7 +154,7 @@ void Line::setLine(const std::string &str)
     _line = str;
 }
 
-void Line::setLine(const Line &line)
+void Line::setLine(const Line line)
 {
     _line = line.getLine();
 }

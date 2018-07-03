@@ -102,15 +102,24 @@ void ServerCreator::createTemplatePage(const std::string &page) const
 {
     std::string srcFile;
     std::string dstFile;
+    std::string fixPage; // replace '-' char with '_'.
+    unsigned long pos;
+    std::map<std::string, std::string> badNames = _website.getBadNames();
 
     srcFile = _website.getPath();
     srcFile += '/' + page;
+
+
     dstFile = _serverDirName + "/templates/" + page;
 
     auto file = new FileEdit(srcFile, dstFile);
 
+    for (std::map<std::string,std::string>::iterator it=badNames.begin(); it!=badNames.end(); ++it)
+        file->replaceAll("href=\"" + it->first + "\"", "href=\"" + it->second + "\"");
+
+
     //Html links
-    file->replaceAll("href=\"{{x}}.html\"", "href=\"{{ url_for({{x}}) }}\"", "{{x}}");
+    file->replaceAll("href=\"{{x}}.html\"", "href=\"{{ url_for('{{x}}') }}\"", "{{x}}");
 
     //Non-js links
     file->replaceAll("href=\"assets/{{x}}\"", "href=\"{{ url_for('static', filename='{{x}}') }}\"", "{{x}}");
@@ -137,19 +146,32 @@ void ServerCreator::createApp() const
 void ServerCreator::addRoutesToApp(FileEdit& app) const
 {
     std::string pageName;
+    std::map<std::string, std::string> badNames = _website.getBadNames();
     for(const std::string& page : _website.getTemplates())
     {
         pageName = page.substr(0, page.length() - 5); // index.html => index
-        if (page == "index")
+        if (pageName == "index")
         {
             app << "@app.route('/')";
             app << "def index():";
             app << "    return render_template('index.html')";
+            app << "";
         }
-        app << "@app.route('/" + pageName + "')";
-        app << "def " + pageName + "():";
-        app << "    return render_template('" + pageName + ".html')";
-        app << "";
+        else
+        {
+            app << "@app.route('/" + pageName + "')";
+            if(badNames.find(page) == badNames.end())
+            {
+                app << "def " + pageName + "():";
+            }
+            else
+            {
+                app << "def " + badNames[page].substr(0, page.length() - 5) + "():";
+            }
+            app << "    return render_template('" + pageName + ".html')";
+            app << "";
+        }
+
     }
 }
 

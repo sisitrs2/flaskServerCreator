@@ -9,7 +9,6 @@
 #include <fstream>
 #include <cstring>
 
-#define NEW_TEMP_FILE "FileEdit"
 
 class Line;
 
@@ -22,17 +21,15 @@ public:
     ~FileEdit();
 
     void saveChanges() const;
-    /***
-     * replaceAll function allow  a change on all lines in file.
-     * if you a var string you may replace a container part of a string.
-     *
-     * example:
-     * replace("href='{{x}}.html'", "source='{{x}}.js'", "{{x}}");
-     *
-     * In this case, strings like: href='myFile.html'
-     * Would turn to: source='myFile.js'
-     *
-     */
+
+    // replaceAll function allow  a change on all lines in file.
+    // if you a var string you may replace a container part of a string.
+    //
+    // example:
+    // replace("href='{{x}}.html'", "source='{{x}}.js'", "{{x}}");
+    //
+    // In this case, strings like: href='myFile.html'
+    // Would turn to: source='myFile.js'
     void replaceAll(const std::string& toRemove, const std::string& newStr);
     void replaceAll(const std::string& toRemove, const std::string& newStr, const std::string& var);
     std::vector<Line>& getLines();
@@ -63,7 +60,7 @@ public:
 
     const std::string& getLine() const;
     void setLine(const std::string& str);
-    void setLine(const Line& line);
+    void setLine(const Line line);
     unsigned long length() const;
     unsigned long find(const std::string& str) const;
     unsigned long find(const std::string& str, const unsigned long& pos) const;

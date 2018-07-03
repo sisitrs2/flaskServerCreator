@@ -34,6 +34,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <map>
 
 
 class Website
@@ -46,6 +47,7 @@ public:
     const std::vector<std::string>& getTemplates() const;
     const std::string& getAssets() const;
     const std::string& getPath() const;
+    const std::map<std::string, std::string>& getBadNames() const;
 
     // This function gets files from path and save them in class vectors
     // I would've put them as private but in case files were added to the
@@ -57,6 +59,7 @@ private:
     std::string _path;                   // Holds website path name.
     std::vector<std::string> _templates; // Holds names of .html files.
     std::string _assets;                 // Holds name of assets/Assets.
+    std::map<std::string, std::string> _badNames;
 
     // Future idea - use map for _assets, get all non .html files and put them
     // in _assets with file name as key and file type as value.
