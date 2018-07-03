@@ -7,13 +7,13 @@
 
 FileEdit::FileEdit(const std::string &file) : _file(file), _isReplaced(true)
 {
-    initFileType(); //Not necessary yet.
+    initFileType(); //Unnecessary yet.
     initLines();
 }
 
 FileEdit::FileEdit(const std::string &src, const std::string &dst) : _file(src), _newFile(dst), _isReplaced(false)
 {
-    initFileType(); //Not necessary yet.
+    initFileType(); //Unnecessary yet.
     initLines();
 }
 
@@ -41,7 +41,7 @@ void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr
     long afterPos; //position of part after var in Line.
     unsigned long toRemoveSize;
 
-    unsigned short newBeforeStart;
+    unsigned int newBeforeStart;
     unsigned long newBeforeSize;
     unsigned long newAfterStart;
     unsigned long newAfterSize;
@@ -78,7 +78,7 @@ void FileEdit::replaceAll(const std::string &toRemove, const std::string &newStr
 
 void FileEdit::initFileType()
 {
-    unsigned long dotPos;
+    unsigned int dotPos;
     unsigned int fileNameLength;
 
     dotPos = _file.find_last_of('.');
@@ -139,6 +139,7 @@ void FileEdit::operator<<(const std::string &str)
 }
 
 
+
 Line::Line(const std::string &str) : _line(str){}
 
 Line::Line(const Line &line) : _line(line.getLine()) {}
@@ -153,7 +154,7 @@ void Line::setLine(const std::string &str)
     _line = str;
 }
 
-void Line::setLine(const Line &line)
+void Line::setLine(const Line line)
 {
     _line = line.getLine();
 }

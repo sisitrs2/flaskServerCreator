@@ -1,10 +1,17 @@
 //
-// Created by daniel on 6/25/18.
+// Copyright(c) 2018 Daniel Arad.
 //
+// Distributed under the MIT License (http://opensource.org/licenses/MIT)
+//
+// ---------------------------------------------------------------------
+// File: Website.cpp
+// ---------------------------------------------------------------------
+//
+
 
 #include "Website.h"
 
-Website::Website(const char *path) : _path(path)
+Website::Website(const std::string& path) : _path(path)
 {
     addFiles();
 }
@@ -14,43 +21,46 @@ const std::vector<std::string> &Website::getTemplates() const
     return _templates;
 }
 
-void Website::setTemplates(const std::vector<std::string> &_templates)
-{
-    this->_templates = _templates;
-}
-
 const std::string &Website::getAssets() const
 {
     return _assets;
 }
 
-void Website::setAssets(const std::string &_assets)
-{
-    this->_assets = _assets;
-}
-
-const char* Website::getPath() const
+const std::string& Website::getPath() const
 {
     return _path;
 }
 
+const std::map<std::string, std::string>& Website::getBadNames() const {
+    return _badNames;
+}
+
+
 void Website::addFiles()
 {
     std::vector<std::string> files; //files and directories
-    std::string output; //store exec function output.
-    std::size_t pos;
-    std::string dotName;
+    std::string fileType;
+    std::string fixFile;
+    unsigned long pos;
 
     getFiles(files);
 
     for(const std::string& file : files) // for(each value in vector : vector) - Added in c++11
     {
-        dotName = getDotName(file);
-        if(dotName == "html")
+        fileType = getFileType(file);
+        if(fileType == "html")
         {
+            pos = file.find('-');
+            if(pos != std::string::npos)
+            {
+                fixFile = file;
+                fixFile[pos] = '_';
+                _badNames[file] = fixFile;
+            }
             _templates.push_back(file);
+
         }
-        else if (dotName.empty() && (file == "assets" || file == "Assets"))
+        else if (fileType.empty() && (file == "assets" || file == "Assets"))
         {
             _assets = file;
         }
@@ -62,7 +72,7 @@ void Website::addFiles()
     }
 }
 
-std::string Website::getDotName(const std::string& file)
+std::string Website::getFileType(const std::string& file)
 {
     std::size_t pos;
     pos = file.find_last_of('.');
@@ -77,10 +87,8 @@ void Website::getFiles(std::vector<std::string>& files)
 {
     std::string output; //store exec function output.
     std::size_t pos;
-    char *cmd = new char[strlen(this->_path)];
-    strcpy(cmd, "cd ");
-    strcat(cmd, _path);
-    strcat(cmd, "; ls");
+    std::string cmd = "cd " + _path + "; ls";
+
     output = exec(cmd); //ls - shell command that lists unhidden files and directories in directory.
 
     while( (pos = output.find('\n')) != std::string::npos )
@@ -90,11 +98,11 @@ void Website::getFiles(std::vector<std::string>& files)
     }
 }
 
-std::string Website::exec(const char* cmd) const
+std::string Website::exec(const std::string& cmd) const
 {
     std::array<char, 128> buffer;
     std::string result;
-    std::shared_ptr<FILE> pipe(popen(cmd, "r"), pclose);
+    std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
     if (!pipe) throw std::runtime_error("popen() failed!");
     while (!feof(pipe.get())) {
         if (fgets(buffer.data(), 128, pipe.get()) != nullptr)
@@ -102,4 +110,3 @@ std::string Website::exec(const char* cmd) const
     }
     return result;
 }
-

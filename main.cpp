@@ -4,11 +4,15 @@
 
 using std::cout;
 using std::endl;
+using std::cin;
 
 int main() {
+    std::string path;
 
-    Website a("../site");
-    ServerCreator b(a);
+    cout << "Enter website directory: ";
+    cin >> path;
+    Website staticWebsite(path);
+    ServerCreator create(staticWebsite);
 
     std::cout << "End of Program." << std::endl;
 
