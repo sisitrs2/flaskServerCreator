@@ -1,6 +1,11 @@
 //
-// Created by daniel on 6/30/18.
+// Copyright(c) 2018 Daniel Arad.
 //
+// Distributed under the MIT License (http://opensource.org/licenses/MIT)
+//
+// ---------------------------------------------------------------------
+// File: FileEdit.cpp
+// ---------------------------------------------------------------------
 
 #include "FileEdit.h"
 
